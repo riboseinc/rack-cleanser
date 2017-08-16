@@ -12,8 +12,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ribose Inc."]
   spec.email         = ["open.source@ribose.com"]
 
-  spec.summary       = 'Cleanse your racks'
-  spec.description   = 'Cleanse your racks'
+  spec.summary       = "Cleanse your racks"
+  spec.description   = "Cleanse your racks"
   spec.homepage      = "https://github.com/riboseinc/rack-cleanser"
   spec.license       = "MIT"
 
@@ -33,13 +33,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'rack'
+  spec.add_dependency "rack"
 
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency 'actionpack', '>= 3.0.0'
-  spec.add_development_dependency 'minitest'
-  spec.add_development_dependency 'rack-test'
+  spec.add_development_dependency "actionpack", ">= 3.0.0"
+  spec.add_development_dependency "minitest"
+  spec.add_development_dependency "rack-test"
   spec.add_development_dependency "rubocop", "~> 0.49.1"
 end

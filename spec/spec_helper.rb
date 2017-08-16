@@ -2,7 +2,7 @@ require "bundler/setup"
 require "rack/cleanser"
 require "rack/test"
 
-require 'action_dispatch'
+require "action_dispatch"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -18,7 +18,7 @@ RSpec.configure do |config|
   def app
     Rack::Builder.new {
       use Rack::Cleanser
-      run lambda {|env| [200, {}, ['Hello World']]}
+      run lambda {|env| [200, {}, ["Hello World"]]}
     }.to_app
   end
 

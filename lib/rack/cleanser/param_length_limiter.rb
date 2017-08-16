@@ -6,7 +6,7 @@
 #
 module Rack
   class Cleanser
-    class RequestTooLargeException < Exception; end
+    class RequestTooLargeException < RuntimeError; end
 
     class ParamLengthLimiter
       def initialize(name, options, block)

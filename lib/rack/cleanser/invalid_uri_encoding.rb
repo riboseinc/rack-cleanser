@@ -57,7 +57,7 @@ module Rack
           REQUEST_URI
           HTTP_X_FORWARDED_HOST
         ].each do |key|
-          unless /\A(?:%[0-9a-fA-F]{2}|[^%])*\z/ =~ env[key].to_s
+          unless /\A(?:%[0-9a-fA-F]{2}|[^%])*\z/.match?(env[key].to_s)
             env[key] = env[key].gsub(/%(?![0-9a-fA-F]{2})/, "%25")
           end
           raise_404_error if check_nested(env[key]) == :bad_query
@@ -67,8 +67,7 @@ module Rack
         # request_params = Rack::Request.new(env).params
         post_params = {}
 
-        post_params = if env["CONTENT_TYPE"] =~
-            %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
+        post_params = if env["CONTENT_TYPE"].match?(%r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n)
                         {}
                       else
                         Rack::Utils.parse_query(env["rack.input"].read, "&")
@@ -85,7 +84,7 @@ module Rack
 
         # make sure the authenticity token is a string
         request_params.keys.each do |key|
-          raise_404_error if key =~ /\Aauthenticity_token\[(.)*\]\z/
+          raise_404_error if key.match?(/\Aauthenticity_token\[(.)*\]\z/)
         end
       end
 

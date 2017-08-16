@@ -57,8 +57,8 @@ module Rack
         413,
         { "Content-Type" => "application/json" },
         [{
-          error_message: "Request entity too large, #{exn.message}"
-        }.to_json]
+          error_message: "Request entity too large, #{exn.message}",
+        }.to_json],
       ]
     }
 

@@ -1,7 +1,6 @@
 require "spec_helper"
 
 RSpec.describe "Rack::Cleanser.limit_param_length" do
-
   shared_examples_for "413 responses" do
     it "returns 413" do
       expect(last_response.status).to eq 413
@@ -41,7 +40,6 @@ RSpec.describe "Rack::Cleanser.limit_param_length" do
   end
 
   context "with no user-default" do
-
     let(:path) { "/test" }
 
     context "with block that always return 10" do
@@ -59,7 +57,6 @@ RSpec.describe "Rack::Cleanser.limit_param_length" do
     end
 
     context "with block differentiating between paths" do
-
       before do
         Rack::Cleanser.limit_param_length("random name") do |env|
           case env["PATH_INFO"]
@@ -113,7 +110,6 @@ RSpec.describe "Rack::Cleanser.limit_param_length" do
   end
 
   context "with user-default" do
-
     context "with block that always return 10" do
       before do
         Rack::Cleanser.limit_param_length("random name", default: 20) do |_env|
@@ -141,7 +137,6 @@ RSpec.describe "Rack::Cleanser.limit_param_length" do
     end
 
     context "with block differentiating between paths" do
-
       before do
         Rack::Cleanser.limit_param_length("random name", default: 20) do |env|
           case env["PATH_INFO"]
@@ -184,7 +179,5 @@ RSpec.describe "Rack::Cleanser.limit_param_length" do
         end
       end
     end
-
   end
-
 end

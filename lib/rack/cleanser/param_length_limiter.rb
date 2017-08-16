@@ -6,11 +6,9 @@
 #
 module Rack
   class Cleanser
-
     class RequestTooLargeException < Exception; end
 
     class ParamLengthLimiter
-
       def initialize(name, options, block)
         @name               = name
         @default_max_length = options[:default] || 2048
@@ -77,7 +75,6 @@ module Rack
         @env = env
         scrub!
       end
-
     end
   end
 end

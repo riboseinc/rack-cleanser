@@ -20,7 +20,7 @@ module Rack
       attr_reader :env
 
       def filter_exceptions
-        env['CONTENT_TYPE'] !~ %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
+        env["CONTENT_TYPE"] !~ %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
       end
 
       # 2048 is arbitrary

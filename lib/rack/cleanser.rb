@@ -1,17 +1,17 @@
 # (c) Copyright 2017 Ribose Inc.
 #
 
-require 'rack'
-require 'rack/cleanser/version'
-require 'forwardable'
-require 'json'
-require 'pp'
+require "rack"
+require "rack/cleanser/version"
+require "forwardable"
+require "json"
+require "pp"
 
 module Rack
   class Cleanser
 
-    autoload :ParamLengthLimiter, 'rack/cleanser/param_length_limiter'
-    autoload :InvalidURIEncoding, 'rack/cleanser/invalid_uri_encoding'
+    autoload :ParamLengthLimiter, "rack/cleanser/param_length_limiter"
+    autoload :InvalidURIEncoding, "rack/cleanser/invalid_uri_encoding"
 
     class << self
 
@@ -57,7 +57,7 @@ module Rack
     @oversize_response = lambda { |_env, exn|
       [
         413,
-        { 'Content-Type' => 'application/json' },
+        { "Content-Type" => "application/json" },
         [{
           error_message: "Request entity too large, #{exn.message}"
         }.to_json]

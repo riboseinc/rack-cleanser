@@ -60,7 +60,7 @@ module Rack
           HTTP_X_FORWARDED_HOST
         ].each do |key|
           unless /\A(?:%[0-9a-fA-F]{2}|[^%])*\z/ =~ env[key].to_s
-            env[key] = env[key].gsub(/%(?![0-9a-fA-F]{2})/, '%25')
+            env[key] = env[key].gsub(/%(?![0-9a-fA-F]{2})/, "%25")
           end
           raise_404_error if check_nested(env[key]) == :bad_query
         end
@@ -69,19 +69,19 @@ module Rack
         # request_params = Rack::Request.new(env).params
         post_params = {}
 
-        post_params = if env['CONTENT_TYPE'] =~
+        post_params = if env["CONTENT_TYPE"] =~
                          %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
                         {}
                       else
-                        Rack::Utils.parse_query(env['rack.input'].read, "&")
+                        Rack::Utils.parse_query(env["rack.input"].read, "&")
                       end
 
-        get_params = Rack::Utils.parse_query(env['QUERY_STRING'], "&")
+        get_params = Rack::Utils.parse_query(env["QUERY_STRING"], "&")
         request_params = {}.merge(get_params).merge(post_params)
 
         # Because env['rack.input'] is String IO object, so we need to rewind
         # that to ensure it can be read again by others.
-        env['rack.input'].rewind
+        env["rack.input"].rewind
 
         raise_404_error if check_encoding(request_params) == :bad_encoding
 
@@ -93,7 +93,7 @@ module Rack
       end
 
       def raise_404_error
-        raise ActionController::RoutingError.new('Not Found')
+        raise ActionController::RoutingError.new("Not Found")
       end
     end
   end

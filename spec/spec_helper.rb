@@ -18,7 +18,7 @@ RSpec.configure do |config|
   def app
     Rack::Builder.new {
       use Rack::Cleanser
-      run lambda {|env| [200, {}, ["Hello World"]]}
+      run lambda { |env| [200, {}, ["Hello World"]] }
     }.to_app
   end
 

@@ -50,7 +50,6 @@ module Rack
         traverse_hash(params) do |val|
           check_val(val)
         end
-
       rescue => e
         warn "\e[1mv: Error raised from ParamLengthLimiter Middleware\e[0m:"
         warn e.message

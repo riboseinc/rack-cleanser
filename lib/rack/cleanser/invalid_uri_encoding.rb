@@ -6,7 +6,6 @@
 module Rack
   class Cleanser
     class InvalidURIEncoding
-
       # General Checking for user's input params
       # throw 404 if params contain abnormal input
       def check_encoding(query)
@@ -48,7 +47,6 @@ module Rack
       end
 
       def [](env)
-
         # Check and clean up trailing % characters by replacing them with their
         # encoded equivalent %25
         %w[
@@ -89,7 +87,6 @@ module Rack
         request_params.keys.each do |key|
           raise_404_error if key =~ /\Aauthenticity_token\[(.)*\]\z/
         end
-
       end
 
       def raise_404_error

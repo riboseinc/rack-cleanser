@@ -9,12 +9,10 @@ require "pp"
 
 module Rack
   class Cleanser
-
     autoload :ParamLengthLimiter, "rack/cleanser/param_length_limiter"
     autoload :InvalidURIEncoding, "rack/cleanser/invalid_uri_encoding"
 
     class << self
-
       attr_accessor :oversize_response
 
       def limit_param_length(name, options = {}, &block)

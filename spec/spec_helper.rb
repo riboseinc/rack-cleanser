@@ -16,10 +16,10 @@ RSpec.configure do |config|
   config.after { Rack::Cleanser.clear! }
 
   def app
-    Rack::Builder.new {
+    Rack::Builder.new do
       use Rack::Cleanser
-      run lambda { |env| [200, {}, ["Hello World"]] }
-    }.to_app
+      run lambda { |_env| [200, {}, ["Hello World"]] }
+    end.to_app
   end
 
   config.expect_with :rspec do |c|

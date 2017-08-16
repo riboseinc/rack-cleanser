@@ -68,7 +68,7 @@ module Rack
         post_params = {}
 
         post_params = if env["CONTENT_TYPE"] =~
-                         %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
+            %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
                         {}
                       else
                         Rack::Utils.parse_query(env["rack.input"].read, "&")

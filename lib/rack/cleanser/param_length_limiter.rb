@@ -37,7 +37,6 @@ module Rack
         case val
         when String then
           if val.length > max_length
-            warn "\e[1mLength is over #{max_length}! (#{val.length})\e[0m"
             raise RequestTooLargeException, "#{val.length} >= #{max_length}"
           end
         end

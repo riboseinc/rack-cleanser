@@ -37,7 +37,6 @@ module Rack
         case val
         when String then
           if val.length > max_length
-            warn "\e[1mLength is over #{max_length}! (#{val.length})\e[0m"
             raise RequestTooLargeException, "#{val.length} >= #{max_length}"
           end
         end
@@ -50,11 +49,6 @@ module Rack
         traverse_hash(params) do |val|
           check_val(val)
         end
-      rescue => e
-        warn "\e[1mv: Error raised from ParamLengthLimiter Middleware\e[0m:"
-        warn e.message
-        warn e.backtrace
-        warn "\e[1m^: Error raised from ParamLengthLimiter Middleware\e[0m:"
       ensure
         env["rack.input"].rewind
       end

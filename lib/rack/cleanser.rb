@@ -9,6 +9,8 @@ require "pp"
 
 module Rack
   class Cleanser
+    HALT = :halt_rack_cleanser
+
     autoload :ParamLengthLimiter, "rack/cleanser/param_length_limiter"
     autoload :InvalidURIEncoding, "rack/cleanser/invalid_uri_encoding"
 
@@ -47,11 +49,13 @@ module Rack
         filter_bad_uri_encoding!(env)
       end
 
-      # Produces an erroneous response in JSON format.
-      def error_response(error_code, error_message)
+      # Produces an erroneous response in JSON format, and halts request
+      # processing.
+      def halt_with_error(error_code, error_message)
         json_h = { error_message: error_message }
         headers = { "Content-Type" => "application/json" }
-        [error_code, headers, [json_h.to_json]]
+        response = [error_code, headers, [json_h.to_json]]
+        throw(HALT, response)
       end
     end
 
@@ -59,15 +63,13 @@ module Rack
       @app = app
     end
 
-    @oversize_response = lambda { |_env, exn|
-      error_response(413, "Request entity too large, #{exn.message}")
-    }
-
     def call(env)
-      cleanse!(env)
-      @app.call(env)
-    rescue RequestTooLargeException => e
-      self.class.oversize_response.call(env, e)
+      response = catch(HALT) do
+        cleanse!(env)
+        nil
+      end
+
+      response || @app.call(env)
     end
 
     extend Forwardable

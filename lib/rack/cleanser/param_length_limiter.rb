@@ -6,8 +6,6 @@
 #
 module Rack
   class Cleanser
-    class RequestTooLargeException < RuntimeError; end
-
     class ParamLengthLimiter
       def initialize(name, options, block)
         @name               = name
@@ -37,7 +35,8 @@ module Rack
         case val
         when String then
           if val.length > max_length
-            raise RequestTooLargeException, "#{val.length} >= #{max_length}"
+            msg = "Request entity too large, #{val.length} >= #{max_length}"
+            Rack::Cleanser::halt_with_error(413, msg)
           end
         end
       end

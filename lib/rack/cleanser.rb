@@ -46,6 +46,13 @@ module Rack
         limit_param_length!(env)
         filter_bad_uri_encoding!(env)
       end
+
+      # Produces an erroneous response in JSON format.
+      def error_response(error_code, error_message)
+        json_h = { error_message: error_message }
+        headers = { "Content-Type" => "application/json" }
+        [error_code, headers, [json_h.to_json]]
+      end
     end
 
     def initialize(app)
@@ -53,13 +60,7 @@ module Rack
     end
 
     @oversize_response = lambda { |_env, exn|
-      [
-        413,
-        { "Content-Type" => "application/json" },
-        [{
-          error_message: "Request entity too large, #{exn.message}",
-        }.to_json],
-      ]
+      error_response(413, "Request entity too large, #{exn.message}")
     }
 
     def call(env)

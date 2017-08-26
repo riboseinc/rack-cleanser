@@ -7,6 +7,8 @@
 module Rack
   class Cleanser
     class ParamLengthLimiter
+      include Regexps
+
       def initialize(name, options, block)
         @name               = name
         @default_max_length = options[:default] || 2048
@@ -16,7 +18,7 @@ module Rack
       attr_reader :env
 
       def filter_exceptions
-        env["CONTENT_TYPE"] !~ %r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n
+        env["CONTENT_TYPE"] !~ CONTENT_TYPE_MULTIPART_FORM
       end
 
       # 2048 is arbitrary

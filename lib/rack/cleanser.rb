@@ -13,6 +13,7 @@ module Rack
 
     autoload :ParamLengthLimiter, "rack/cleanser/param_length_limiter"
     autoload :InvalidURIEncoding, "rack/cleanser/invalid_uri_encoding"
+    autoload :Regexps, "rack/cleanser/regexps"
 
     class << self
       attr_accessor :oversize_response

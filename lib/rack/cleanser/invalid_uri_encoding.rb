@@ -6,6 +6,8 @@
 module Rack
   class Cleanser
     class InvalidURIEncoding
+      include Regexps
+
       # General Checking for user's input params
       # throw 404 if params contain abnormal input
       def check_encoding(query)
@@ -57,8 +59,8 @@ module Rack
           REQUEST_URI
           HTTP_X_FORWARDED_HOST
         ].each do |key|
-          if /%(?![0-9a-fA-F]{2})/.match?(env[key].to_s)
-            env[key] = env[key].gsub(/%(?![0-9a-fA-F]{2})/, "%25")
+          if LONE_PERCENT_SIGN.match?(env[key].to_s)
+            env[key] = env[key].gsub(LONE_PERCENT_SIGN, "%25")
           end
           raise_404_error if check_nested(env[key]) == :bad_query
         end
@@ -67,7 +69,7 @@ module Rack
         # request_params = Rack::Request.new(env).params
         post_params = {}
 
-        post_params = if (env["CONTENT_TYPE"] || "").match?(%r{\Amultipart/form-data.*boundary=\"?([^\";,]+)\"?}n)
+        post_params = if (env["CONTENT_TYPE"] || "").match?(CONTENT_TYPE_MULTIPART_FORM)
                         {}
                       else
                         Rack::Utils.parse_query(env["rack.input"].read, "&")
@@ -84,7 +86,7 @@ module Rack
 
         # make sure the authenticity token is a string
         request_params.keys.each do |key|
-          raise_404_error if key.match?(/\Aauthenticity_token\[(.)*\]\z/)
+          raise_404_error if key.match?(HEADER_AUTH_TOKEN)
         end
       end
 

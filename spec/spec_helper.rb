@@ -1,6 +1,8 @@
 require "bundler"
 Bundler.require :default, :development
 
+Dir[File.expand_path "../support/**/*.rb", __FILE__].each { |f| require f }
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -10,14 +12,9 @@ RSpec.configure do |config|
 
   config.include Rack::Test::Methods
 
-  config.after { Rack::Cleanser.clear! }
+  config.include_context "test stack"
 
-  def app
-    Rack::Builder.new do
-      use Rack::Cleanser
-      run lambda { |_env| [200, {}, ["Hello World"]] }
-    end.to_app
-  end
+  config.after { Rack::Cleanser.clear! }
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

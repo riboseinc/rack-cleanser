@@ -8,9 +8,8 @@ RSpec.describe "Handling invalid encoding" do
 
   it "passes requests which has minimal header set and no parameters through" do
     http_methods.each do |http_m|
-      response = mock_request.request http_m, "/", {}
-      expect(response.status).to eq(200)
-      expect(response.body).to eq("Hello World")
+      response = make_request method: http_m, headers: {}
+      expect(response).to be_coming_from_inner_app
     end
   end
 
@@ -33,20 +32,30 @@ RSpec.describe "Handling invalid encoding" do
       bad_fixed = "pre%25tty%25-ba%25d"
 
       http_methods.each do |http_m|
-        response = mock_request.request http_m, "/", { header_name => good }
-        expect(inner_app).to have_received(:call).with(
-          hash_including("REQUEST_METHOD" => http_m, header_name => good),
+        response = make_request method: http_m, headers: { header_name => good }
+        expect(inner_app).to have_been_called_with_headers(
+          "REQUEST_METHOD" => http_m, header_name => good,
         )
-        expect(response.status).to eq(200)
-        expect(response.body).to eq("Hello World")
+        expect(response).to be_coming_from_inner_app
 
-        response = mock_request.request http_m, "/", { header_name => bad }
-        expect(inner_app).to have_received(:call).with(
-          hash_including("REQUEST_METHOD" => http_m, header_name => bad_fixed),
+        response = make_request method: http_m, headers: { header_name => bad }
+        expect(inner_app).to have_been_called_with_headers(
+          "REQUEST_METHOD" => http_m, header_name => bad_fixed,
         )
-        expect(response.status).to eq(200)
-        expect(response.body).to eq("Hello World")
+        expect(response).to be_coming_from_inner_app
       end
     end
+  end
+
+  def make_request(method:, path: "/", headers: {})
+    mock_request.request method, path, headers
+  end
+
+  def be_coming_from_inner_app
+    satisfy { |r| r.status == 200 && r.body == "Hello World" }
+  end
+
+  def have_been_called_with_headers(headers)
+    have_received(:call).with(hash_including(headers))
   end
 end

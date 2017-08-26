@@ -1,6 +1,9 @@
 RSpec.shared_context "test stack" do
   let(:inner_app) do
-    lambda { |_env| [200, {}, ["Hello World"]] }
+    double.tap do |dbl|
+      ok = [200, {}, ["Hello World"]]
+      allow(dbl).to receive(:call).with(kind_of(Hash)).and_return(ok)
+    end
   end
 
   let(:app) do

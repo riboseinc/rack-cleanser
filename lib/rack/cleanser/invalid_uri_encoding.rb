@@ -57,7 +57,7 @@ module Rack
           REQUEST_URI
           HTTP_X_FORWARDED_HOST
         ].each do |key|
-          unless /\A(?:%[0-9a-fA-F]{2}|[^%])*\z/.match?(env[key].to_s)
+          if /%(?![0-9a-fA-F]{2})/.match?(env[key].to_s)
             env[key] = env[key].gsub(/%(?![0-9a-fA-F]{2})/, "%25")
           end
           raise_404_error if check_nested(env[key]) == :bad_query

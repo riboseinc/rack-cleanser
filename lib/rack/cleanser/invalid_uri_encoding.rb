@@ -59,7 +59,7 @@ module Rack
           REQUEST_URI
           HTTP_X_FORWARDED_HOST
         ].each do |key|
-          if LONE_PERCENT_SIGN.match?(env[key].to_s)
+          if LONE_PERCENT_SIGN =~ env[key].to_s
             env[key] = env[key].gsub(LONE_PERCENT_SIGN, "%25")
           end
           raise_404_error if check_nested(env[key]) == :bad_query
@@ -69,7 +69,7 @@ module Rack
         # request_params = Rack::Request.new(env).params
         post_params = {}
 
-        post_params = if (env["CONTENT_TYPE"] || "").match?(CONTENT_TYPE_MULTIPART_FORM)
+        post_params = if (env["CONTENT_TYPE"] || "") =~ CONTENT_TYPE_MULTIPART_FORM
                         {}
                       else
                         Rack::Utils.parse_query(env["rack.input"].read, "&")
@@ -86,7 +86,7 @@ module Rack
 
         # make sure the authenticity token is a string
         request_params.keys.each do |key|
-          raise_404_error if key.match?(HEADER_AUTH_TOKEN)
+          raise_404_error if key =~ HEADER_AUTH_TOKEN
         end
       end
 

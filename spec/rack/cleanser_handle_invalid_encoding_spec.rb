@@ -110,8 +110,9 @@ RSpec.describe "Handling invalid encoding" do
     end
   end
 
-  def make_request(method:, path: "/", headers: {})
-    mock_request.request method, path, headers
+  def make_request(method:, path: "/", headers: {}, body: nil)
+    env = body ? headers.merge(input: body) : headers
+    mock_request.request method, path, env
   end
 
   def be_coming_from_inner_app

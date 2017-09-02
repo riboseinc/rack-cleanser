@@ -66,6 +66,48 @@ RSpec.describe "Handling invalid encoding" do
           to raise_exception(ActionController::RoutingError)
       end
     end
+
+    it "returns HTTP 404 when form-encoded parameters in POST requests " \
+       "contain percent-encoded byte sequences which are invalid in UTF-8" do
+      good = "some_control=wspania%c5%82y"
+      bad = "some_control=wspania%c5y"
+      headers = { "CONTENT_TYPE" => "application/x-www-form-urlencoded" }
+
+      response = make_request method: "POST", body: good, headers: headers
+      expect(response).to be_coming_from_inner_app
+
+      expect { make_request method: "POST", body: bad, headers: headers }.
+        to raise_exception(ActionController::RoutingError)
+    end
+
+    it "allows any characters in parameters which are sent in message body " \
+       "of multipart POST request" do
+
+      headers = { "CONTENT_TYPE" => "multipart/form-data; boundary=boundary" }
+
+      good = <<~FORM
+        --boundary
+        Content-Disposition: form-data; name="good_value"
+
+        wspania%c5%82y
+        --boundary
+        Content-Disposition: form-data; name="also_good"
+
+        wspania%c5y
+        --boundary
+        Content-Disposition: form-data; name="also_good_2"
+
+        wspania\xc5\x82y
+        --boundary
+        Content-Disposition: form-data; name="also_good_3"
+
+        wspania\xc5y
+        --boundary--
+      FORM
+
+      response = make_request method: "POST", body: good, headers: headers
+      expect(response).to be_coming_from_inner_app
+    end
   end
 
   def make_request(method:, path: "/", headers: {})

@@ -8,6 +8,14 @@ module Rack
     class InvalidURIEncoding
       include Regexps
 
+      # Escapes lone percent signs, that is percent sign characters which are
+      # not followed by two hex digits
+      def fix_lone_percent_signs(string_to_fix)
+        if LONE_PERCENT_SIGN =~ string_to_fix.to_s
+          string_to_fix.gsub!(LONE_PERCENT_SIGN, "%25")
+        end
+      end
+
       # General Checking for user's input params
       # throw 404 if params contain abnormal input
       def check_encoding(query)
@@ -59,9 +67,7 @@ module Rack
           REQUEST_URI
           HTTP_X_FORWARDED_HOST
         ].each do |key|
-          if LONE_PERCENT_SIGN =~ env[key].to_s
-            env[key] = env[key].gsub(LONE_PERCENT_SIGN, "%25")
-          end
+          fix_lone_percent_signs(env[key])
           check_nested(env[key])
         end
 

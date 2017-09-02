@@ -3,13 +3,13 @@ require "spec_helper"
 RSpec.describe "Rack::Cleanser.limit_param_length" do
   shared_examples_for "413 responses" do
     it "returns 413" do
-      expect(last_response.status).to eq 413
+      expect(last_response).to be_an_error(413)
     end
   end
 
   shared_examples_for "200 responses" do
     it "returns 200" do
-      expect(last_response.status).to eq 200
+      expect(last_response).to be_coming_from_inner_app
     end
   end
 

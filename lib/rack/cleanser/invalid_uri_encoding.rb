@@ -73,8 +73,6 @@ module Rack
 
         # use these methods to get params as there is conflict with openresty
         # request_params = Rack::Request.new(env).params
-        post_params = {}
-
         post_params = if (env["CONTENT_TYPE"] || "") =~ CONTENT_TYPE_MULTIPART_FORM
                         {}
                       else

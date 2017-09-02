@@ -11,6 +11,10 @@ rvm:
   - "jruby"
   - "jruby-head"
 
+gemfile:
+  - "gemfiles/Rack-1.gemfile"
+  - "gemfiles/Rack-2.gemfile"
+
 matrix:
   allow_failures:
     - rvm: "ruby-head"

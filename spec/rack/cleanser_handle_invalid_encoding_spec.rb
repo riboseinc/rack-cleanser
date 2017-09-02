@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Handling invalid encoding" do
+RSpec.describe "Handling invalid encoding", :with_request_maker do
   before { Rack::Cleanser.filter_bad_uri_encoding }
 
   let(:mock_request) { Rack::MockRequest.new(app) }
@@ -108,10 +108,5 @@ RSpec.describe "Handling invalid encoding" do
       response = make_request method: "POST", body: good, headers: headers
       expect(response).to be_coming_from_inner_app
     end
-  end
-
-  def make_request(method:, path: "/", headers: {}, body: nil)
-    env = body ? headers.merge(input: body) : headers
-    mock_request.request method, path, env
   end
 end

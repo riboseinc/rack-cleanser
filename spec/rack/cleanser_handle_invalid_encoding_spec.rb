@@ -45,6 +45,27 @@ RSpec.describe "Handling invalid encoding" do
         expect(response).to be_coming_from_inner_app
       end
     end
+
+    it "returns HTTP 404 if #{header_name} contains percent-encoded byte " \
+       "sequences which are invalid in UTF-8" do
+
+      # %c5 and %82 are valid hex representations, and in this sequence they
+      # stand for Polish "ł" character in UTF-8.  Neither %c5 nor %82 are valid
+      # when alone
+      good = "wspania%c5%82y"
+      bad = "wspania%c5y"
+
+      http_methods.each do |http_m|
+        response = make_request method: http_m, headers: { header_name => good }
+        expect(inner_app).to have_been_called_with_headers(
+          "REQUEST_METHOD" => http_m, header_name => good,
+        )
+        expect(response).to be_coming_from_inner_app
+
+        expect { make_request method: http_m, headers: { header_name => bad } }.
+          to raise_exception(ActionController::RoutingError)
+      end
+    end
   end
 
   def make_request(method:, path: "/", headers: {})

@@ -14,7 +14,7 @@ module Rack
         # make sure all params have valid encoding
         all_values_for_hash(query).each do |param|
           if param.respond_to?(:valid_encoding?) && !param.valid_encoding?
-            return :bad_encoding
+            halt_with_404
           end
         end
       end
@@ -22,7 +22,7 @@ module Rack
       def check_nested(query)
         Rack::Utils.parse_nested_query(query)
       rescue
-        :bad_query
+        halt_with_404
       end
 
       # to get all values from a nested hash (i.e a hash contains hashes/arrays)
@@ -62,7 +62,7 @@ module Rack
           if LONE_PERCENT_SIGN =~ env[key].to_s
             env[key] = env[key].gsub(LONE_PERCENT_SIGN, "%25")
           end
-          halt_with_404 if check_nested(env[key]) == :bad_query
+          check_nested(env[key])
         end
 
         # use these methods to get params as there is conflict with openresty
@@ -82,7 +82,7 @@ module Rack
         # that to ensure it can be read again by others.
         env["rack.input"].rewind
 
-        halt_with_404 if check_encoding(request_params) == :bad_encoding
+        check_encoding(request_params)
 
         # make sure the authenticity token is a string
         request_params.keys.each do |key|

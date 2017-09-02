@@ -6,7 +6,6 @@ require "rack/cleanser/version"
 require "forwardable"
 require "json"
 require "pp"
-require "action_controller/metal/exceptions"
 
 module Rack
   class Cleanser

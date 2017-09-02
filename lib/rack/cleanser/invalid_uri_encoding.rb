@@ -62,7 +62,7 @@ module Rack
           if LONE_PERCENT_SIGN =~ env[key].to_s
             env[key] = env[key].gsub(LONE_PERCENT_SIGN, "%25")
           end
-          raise_404_error if check_nested(env[key]) == :bad_query
+          halt_with_404 if check_nested(env[key]) == :bad_query
         end
 
         # use these methods to get params as there is conflict with openresty
@@ -82,16 +82,17 @@ module Rack
         # that to ensure it can be read again by others.
         env["rack.input"].rewind
 
-        raise_404_error if check_encoding(request_params) == :bad_encoding
+        halt_with_404 if check_encoding(request_params) == :bad_encoding
 
         # make sure the authenticity token is a string
         request_params.keys.each do |key|
-          raise_404_error if key =~ HEADER_AUTH_TOKEN
+          halt_with_404 if key =~ HEADER_AUTH_TOKEN
         end
       end
 
-      def raise_404_error
-        raise ActionController::RoutingError.new("Not Found")
+      def halt_with_404
+        msg = "Page not found"
+        Rack::Cleanser::halt_with_error(404, msg)
       end
     end
   end

@@ -62,8 +62,8 @@ RSpec.describe "Handling invalid encoding" do
         )
         expect(response).to be_coming_from_inner_app
 
-        expect { make_request method: http_m, headers: { header_name => bad } }.
-          to raise_exception(ActionController::RoutingError)
+        response = make_request method: http_m, headers: { header_name => bad }
+        expect(response).to be_an_error(404)
       end
     end
 
@@ -76,8 +76,8 @@ RSpec.describe "Handling invalid encoding" do
       response = make_request method: "POST", body: good, headers: headers
       expect(response).to be_coming_from_inner_app
 
-      expect { make_request method: "POST", body: bad, headers: headers }.
-        to raise_exception(ActionController::RoutingError)
+      response = make_request method: "POST", body: bad, headers: headers
+      expect(response).to be_an_error(404)
     end
 
     it "allows any characters in parameters which are sent in message body " \
@@ -117,6 +117,15 @@ RSpec.describe "Handling invalid encoding" do
 
   def be_coming_from_inner_app
     satisfy { |r| r.status == 200 && r.body == "Hello World" }
+  end
+
+  def be_an_error(code)
+    satisfy do |r|
+      # rubocop:disable Style/RescueModifier
+      parsed_json = (JSON.parse(r.body) rescue {})
+      # rubocop:enable Style/RescueModifier
+      r.status == code && parsed_json.has_key?("error_message")
+    end
   end
 
   def have_been_called_with_headers(headers)

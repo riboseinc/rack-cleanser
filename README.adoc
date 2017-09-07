@@ -6,6 +6,7 @@
 image:https://img.shields.io/gem/v/rack-cleanser.svg["Gem Version", link="https://rubygems.org/gems/rack-cleanser"]
 image:https://img.shields.io/travis/riboseinc/rack-cleanser/master.svg["Build Status", link="https://travis-ci.org/riboseinc/rack-cleanser"]
 image:https://img.shields.io/codeclimate/github/riboseinc/rack-cleanser.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/rack-cleanser"]
+image:https://img.shields.io/codeclimate/coverage/github/riboseinc/rack-cleanser.svg["Test Coverage", link="https://codeclimate.com/github/riboseinc/rack-cleanser"]
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rack/cleanser`. To experiment with that code, run `bin/console` for an interactive prompt.
 

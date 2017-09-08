@@ -87,11 +87,6 @@ module Rack
         env["rack.input"].rewind
 
         check_encoding(request_params)
-
-        # make sure the authenticity token is a string
-        request_params.keys.each do |key|
-          halt_with_404 if key =~ HEADER_AUTH_TOKEN
-        end
       end
 
       def halt_with_404

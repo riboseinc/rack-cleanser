@@ -9,8 +9,6 @@ module Rack
 
       # A percent sign character which is not followed by two hex digits
       LONE_PERCENT_SIGN = /%(?![0-9a-fA-F]{2})/
-
-      HEADER_AUTH_TOKEN = /\Aauthenticity_token\[(.)*\]\z/
     end
   end
 end

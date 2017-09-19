@@ -13,9 +13,10 @@ module Rack
         @name               = name
         @default_max_length = options[:default] || 2048
         @block              = block
+        @mutex              = Mutex.new
       end
 
-      attr_reader :env
+      attr_reader :env, :mutex
 
       def filter_exceptions
         env["CONTENT_TYPE"] !~ CONTENT_TYPE_MULTIPART_FORM
@@ -66,8 +67,10 @@ module Rack
       end
 
       def [](env)
-        @env = env
-        scrub!
+        mutex.synchronize do
+          @env = env
+          scrub!
+        end
       end
     end
   end
